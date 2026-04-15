@@ -235,4 +235,61 @@ void viewReportCard(List<Map<String, dynamic>> students) {
 ╚══════════════════════════════╝''');
 }
 
-void classSummary(List<Map<String, dynamic>> students) {}
+// Helper method for class summary calculation
+double getStudentAvg(Map<String, dynamic> student) {
+  var scores = student["scores"] as List<int>;
+  if (scores.isEmpty) return 0.0;
+  int sum = 0;
+  for (var s in scores) {
+    sum += s;
+  }
+  double avg = (sum / scores.length) + (student["bonus"] as int? ?? 0);
+  return avg > 100 ? 100.0 : avg;
+}
+
+void classSummary(List<Map<String, dynamic>> students) {
+  if (students.isEmpty) {
+    print("No students available.");
+    return;
+  }
+
+  int passCount = 0;
+  Set<String> uniqueGrades = {};
+
+  //Collection for
+  var summaryLines = [
+    for (var s in students)
+      "${s["name"]}: ${getStudentAvg(s).toStringAsFixed(1)}",
+  ];
+
+  for (var s in students) {
+    double avg = getStudentAvg(s);
+    var scores = s["scores"] as List<int>;
+
+    //Logical operators &&
+    if (scores.isNotEmpty && avg >= 60) {
+      passCount++;
+    }
+
+    // Calculate unique grades for the Set
+    if (avg >= 90)
+      uniqueGrades.add("A");
+    else if (avg >= 80)
+      uniqueGrades.add("B");
+    else if (avg >= 70)
+      uniqueGrades.add("C");
+    else if (avg >= 60)
+      uniqueGrades.add("D");
+    else
+      uniqueGrades.add("F");
+  }
+
+  print("\n--- CLASS SUMMARY ---");
+  print("Total Students: ${students.length}");
+  print("Passing Students: $passCount");
+  print("Unique Grades in Class: $uniqueGrades");
+  print("Student Averages:");
+  for (var line in summaryLines) {
+    print(" - $line");
+  }
+}
