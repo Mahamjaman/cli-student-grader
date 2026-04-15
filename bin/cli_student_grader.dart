@@ -126,8 +126,35 @@ void recordScore(List<Map<String, dynamic>> students) {
   print("✅ Score recorded for ${student["name"]}.");
 }
 
-void addBonusPoints(List<Map<String, dynamic>> students) {}
-void addComment(List<Map<String, dynamic>> students) {}
+void addBonusPoints(List<Map<String, dynamic>> students) {
+  var student = selectStudent(students);
+  if (student == null) return;
+
+  stdout.write("Enter bonus points (1-10): ");
+  var bonus = int.tryParse(stdin.readLineSync() ?? "");
+
+  if (bonus != null && bonus >= 1 && bonus <= 10) {
+    if (student["bonus"] == null) {
+      //??= (null-aware assign)
+      student["bonus"] ??= bonus;
+      print("✅ Bonus added!");
+    } else {
+      print("⚠️ Bonus was already set to ${student["bonus"]}.");
+    }
+  } else {
+    print("❌ Invalid bonus amount.");
+  }
+}
+
+void addComment(List<Map<String, dynamic>> students) {
+  var student = selectStudent(students);
+  if (student == null) return;
+
+  stdout.write("Enter teacher comment: ");
+  student["comment"] = stdin.readLineSync();
+  print("✅ Comment recorded.");
+}
+
 void viewAllStudents(List<Map<String, dynamic>> students) {}
 void viewReportCard(List<Map<String, dynamic>> students) {}
 void classSummary(List<Map<String, dynamic>> students) {}
