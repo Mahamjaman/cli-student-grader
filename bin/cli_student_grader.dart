@@ -3,20 +3,20 @@ import 'package:cli_student_grader/cli_student_grader.dart'
 
 import 'dart:io';
 
-// CONCEPT 3: const
+//  const
 const String appTitle = "Student Grader v1.0";
 
-// CONCEPT 2: final | CONCEPT 20: Set
+//  final, Set
 final Set<String> availableSubjects = {"Math", "English", "Science", "History"};
 
 void main() {
-  // CONCEPT 1: var | CONCEPT 19: List | CONCEPT 21: Map
+  // var , List, Map
   var students = <Map<String, dynamic>>[];
   var isRunning = true;
 
-  // CONCEPT 18: do-while loop
+  // do-while loop
   do {
-    // CONCEPT 12: Multi-line strings | CONCEPT 11: String interpolation
+    //Multi-line strings,String interpolation
     print('''
 \n===== $appTitle =====
 1. Add Student
@@ -32,7 +32,7 @@ void main() {
     stdout.write("Choose an option: ");
     var choice = stdin.readLineSync();
 
-    // CONCEPT 14: switch (Menu routing)
+    // switch (Menu routing)
     switch (choice) {
       case '1':
         addStudent(students);
@@ -66,7 +66,23 @@ void main() {
 }
 
 // We will create empty functions for now so the code runs.
-void addStudent(List<Map<String, dynamic>> students) {}
+void addStudent(List<Map<String, dynamic>> students) {
+  stdout.write("Enter student's name: ");
+  var name = stdin.readLineSync() ?? "Unknown";
+
+  // CONCEPT 4: int? / String? (Implicitly declared via nullable values in dynamic map)
+  var newStudent = <String, dynamic>{
+    "name": name,
+    "scores": <int>[],
+    "subjects": {...availableSubjects}, // CONCEPT 24: Spread operator
+    "bonus": null,
+    "comment": null,
+  };
+
+  students.add(newStudent);
+  print("✅ Student '$name' added successfully!");
+}
+
 void recordScore(List<Map<String, dynamic>> students) {}
 void addBonusPoints(List<Map<String, dynamic>> students) {}
 void addComment(List<Map<String, dynamic>> students) {}
