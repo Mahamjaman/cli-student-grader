@@ -155,6 +155,84 @@ void addComment(List<Map<String, dynamic>> students) {
   print("✅ Comment recorded.");
 }
 
-void viewAllStudents(List<Map<String, dynamic>> students) {}
-void viewReportCard(List<Map<String, dynamic>> students) {}
+void viewAllStudents(List<Map<String, dynamic>> students) {
+  if (students.isEmpty) {
+    print("No students to display.");
+    return;
+  }
+  // for-in loop
+  for (var student in students) {
+    // Collection if
+    var tags = [
+      student["name"],
+      "${(student["scores"] as List).length} scores",
+      if (student["bonus"] != null) "⭐ Has Bonus",
+    ];
+    print(tags.join(" | "));
+  }
+}
+
+void viewReportCard(List<Map<String, dynamic>> students) {
+  var student = selectStudent(students);
+  if (student == null) return;
+
+  var scores = student["scores"] as List<int>;
+  double rawAvg = 0.0;
+
+  if (scores.isNotEmpty) {
+    int sum = 0;
+    for (int i = 0; i < scores.length; i++) {
+      // CONCEPT 8: Arithmetic operators
+      sum += scores[i];
+    }
+    rawAvg = sum / scores.length;
+  }
+
+  //?? (if-null fallback)
+  int bonus = student["bonus"] as int? ?? 0;
+  double finalAvg = rawAvg + bonus;
+  if (finalAvg > 100) finalAvg = 100; // Cap at 100
+
+  String grade;
+  // if / else if / else
+  if (finalAvg >= 90) {
+    grade = "A";
+  } else if (finalAvg >= 80) {
+    grade = "B";
+  } else if (finalAvg >= 70) {
+    grade = "C";
+  } else if (finalAvg >= 60) {
+    grade = "D";
+  } else {
+    grade = "F";
+  }
+
+  // CONCEPT 7: ?. (null-aware access) and ??
+  String displayComment =
+      (student["comment"] as String?)?.toUpperCase() ?? "No comment provided";
+
+  // switch expression with pattern matching
+  String feedback = switch (grade) {
+    "A" => "Outstanding performance!",
+    "B" => "Good work, keep it up!",
+    "C" => "Satisfactory. Room to improve.",
+    "D" => "Needs improvement.",
+    "F" => "Failing. Please seek help.",
+    _ => "Unknown grade.",
+  };
+
+  print('''
+╔══════════════════════════════╗
+║       REPORT CARD            ║
+╠══════════════════════════════╝
+║  Name:    ${student["name"]}
+║  Scores:  $scores
+║  Bonus:   +${student["bonus"] ?? 0}
+║  Average: ${finalAvg.toStringAsFixed(1)}
+║  Grade:   $grade
+║  Comment: $displayComment
+║  Note:    $feedback
+╚══════════════════════════════╝''');
+}
+
 void classSummary(List<Map<String, dynamic>> students) {}
