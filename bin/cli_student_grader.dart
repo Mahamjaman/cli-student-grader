@@ -70,11 +70,11 @@ void addStudent(List<Map<String, dynamic>> students) {
   stdout.write("Enter student's name: ");
   var name = stdin.readLineSync() ?? "Unknown";
 
-  // CONCEPT 4: int? / String? (Implicitly declared via nullable values in dynamic map)
+  // int? / String?
   var newStudent = <String, dynamic>{
     "name": name,
     "scores": <int>[],
-    "subjects": {...availableSubjects}, // CONCEPT 24: Spread operator
+    "subjects": {...availableSubjects}, // Spread operator
     "bonus": null,
     "comment": null,
   };
@@ -83,7 +83,49 @@ void addStudent(List<Map<String, dynamic>> students) {
   print("✅ Student '$name' added successfully!");
 }
 
-void recordScore(List<Map<String, dynamic>> students) {}
+// Helper function to easily select a student
+Map<String, dynamic>? selectStudent(List<Map<String, dynamic>> students) {
+  if (students.isEmpty) {
+    print("No students available. Add a student first.");
+    return null;
+  }
+
+  // for loop (indexed)
+  for (int i = 0; i < students.length; i++) {
+    print("${i + 1}. ${students[i]["name"]}");
+  }
+
+  stdout.write("Select a student number: ");
+  var index = int.tryParse(stdin.readLineSync() ?? "") ?? -1;
+
+  if (index >= 1 && index <= students.length) {
+    return students[index - 1];
+  }
+
+  print("Invalid selection.");
+  return null;
+}
+
+void recordScore(List<Map<String, dynamic>> students) {
+  var student = selectStudent(students);
+  if (student == null) return;
+
+  print("Available subjects: ${student["subjects"]}");
+
+  int score = -1;
+  // while loop, Relational operators
+  while (score < 0 || score > 100) {
+    stdout.write("Enter score (0-100): ");
+    score = int.tryParse(stdin.readLineSync() ?? "-1") ?? -1;
+    if (score < 0 || score > 100) {
+      print("❌ Invalid score. Must be between 0 and 100.");
+    }
+  }
+
+  (student["scores"] as List<int>).add(score);
+  print("✅ Score recorded for ${student["name"]}.");
+}
+
 void addBonusPoints(List<Map<String, dynamic>> students) {}
 void addComment(List<Map<String, dynamic>> students) {}
 void viewAllStudents(List<Map<String, dynamic>> students) {}
